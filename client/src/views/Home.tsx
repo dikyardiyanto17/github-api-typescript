@@ -14,21 +14,29 @@ const Home = () => {
   const [displayUser, setDisplayUser] = useState<boolean>(false);
   const [displayRepository, setDisplayRepository] = useState<boolean>(false);
   const fetchusers = async (username: string) => {
-    setLoading(true);
-    const res = await fetch(
-      `https://api.github.com/search/users?q=${username}&per_page=5`
-    );
-    const data = await res.json();
-    setGithubUser(data.items);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const res = await fetch(
+        `https://api.github.com/search/users?q=${username}&per_page=5`
+      );
+      const data = await res.json();
+      setGithubUser(data.items);
+      setLoading(false);
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const fetchRepos = async (username: string) => {
-    setLoading(true);
-    const res = await fetch(`https://api.github.com/users/${username}/repos`);
-    const data = await res.json();
-    setUserRepository(data);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const res = await fetch(`https://api.github.com/users/${username}/repos`);
+      const data = await res.json();
+      setUserRepository(data);
+      setLoading(false);
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const submitHandler = (e: React.FormEvent) => {
@@ -61,15 +69,15 @@ const Home = () => {
             />
           </Form.Group>
           <Button variant="primary" type="submit">
-            Submit
+            Search
           </Button>
         </Form>
-        {firstOpen === true && <h1>Type and Submit to search user</h1>}
+        {firstOpen === true && <h1>Type and Enter to Search Users</h1>}
         {loading === true && <h1>Loading...</h1>}
         {githubUser?.length === 0 &&
           firstOpen === false &&
           displayUser === true &&
-          loading === false && <h1>User is not exist</h1>}
+          loading === false && <h1>User is not found</h1>}
         <div className="d-flex justify-content-center flex-wrap">
           {githubUser?.length !== 0 &&
             displayUser === true &&
@@ -102,6 +110,9 @@ const Home = () => {
             })}
         </div>
         <div className="d-flex justify-content-center flex-wrap">
+          {userRepository?.length === 0 &&
+            displayRepository === true &&
+            loading === false && <h1>There is no Repository</h1>}
           {userRepository?.length !== 0 &&
             displayRepository === true &&
             userRepository.map((repo: any) => {
@@ -125,7 +136,9 @@ const Home = () => {
                         <p className="secondary-text">
                           {repo.description.slice(0, 130)}
                           {repo.description.length >= 130 && (
-                            <span>...readmore</span>
+                            <a href={repo.html_url} target="_blank">
+                              <span>...readmore</span>
+                            </a>
                           )}
                         </p>
                       )}
@@ -136,7 +149,13 @@ const Home = () => {
                       )}
                     </div>
                     <button className="primary-text button-custom">
-                      <a href={repo.html_url} target="_blank" style={{textDecoration: 'none', color: 'white'}}>To Repository</a>
+                      <a
+                        href={repo.html_url}
+                        target="_blank"
+                        style={{ textDecoration: "none", color: "white" }}
+                      >
+                        To Repository
+                      </a>
                     </button>
                   </div>
                 </>
