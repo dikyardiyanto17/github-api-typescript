@@ -1,0 +1,16 @@
+.custom-padding {
+  padding: 20px;
+  text-align: center;
+}
+
+.heading-title {
+  font-size: 25px !important;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 555px) {
+  .heading-title {
+    font-size: 15px !important;
+    font-weight: bold;
+  }
+}
